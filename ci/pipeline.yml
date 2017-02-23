@@ -161,12 +161,18 @@ resources:
     private_key: {{github-key}}
 
 - name: prometheus-boshrelease
-  type: bosh-io-release
-  source: {repository: cloudfoundry-community/prometheus-boshrelease}
+  type: github-release
+  source:
+    access_token: {{github-release-access-token}}
+    user: cloudfoundry-community
+    repository: prometheus-boshrelease
 
 - name: node-exporter-boshrelease
-  type: bosh-io-release
-  source: {repository: cloudfoundry-community/node-exporter-boshrelease}
+  type: github-release
+  source:
+    access_token: {{github-release-access-token}}
+    user: cloudfoundry-community
+    repository: node-exporter-boshrelease
 
 - name: pivnet-stemcell
   type: pivnet
