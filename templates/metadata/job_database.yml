@@ -4,8 +4,6 @@ job_types:
   templates:
   - {name: postgres, release: postgres}
   - {name: postgres, release: postgres}
-  - {name: toolbelt, release: toolbelt}
-  - {name: toolbelt-quick, release: toolbelt}
   static_ip: 1
   dynamic_ip: 0
   max_in_flight: 1
@@ -48,15 +46,12 @@ job_types:
   manifest: |
     pgpool:
       databases:
-      - extensions:
-        - citext
-        - pgcrypto
+      - extensions: [citext, pgcrypto]
         name: grafanadb
-        users:
-        - grafanadbadmin
+        users: [grafanadbadmin]
       users:
-      - password: REDACTED
-        username: grafanadbadmin
+      - username: (( .properties.database_username.value ))
+        password: (( .properties.database_password.value ))
     postgres:
       config:
         listen_addresses: '*'

@@ -53,6 +53,7 @@ spruce merge --prune meta \
   tile/templates/metadata/job_compilation.yml \
   tile/templates/metadata/job_database.yml \
   tile/templates/metadata/job_prometheus.yml \
+  tile/templates/metadata/job_grafana.yml \
     > workspace/metadata/dingo-prometheus.yml
 
 
