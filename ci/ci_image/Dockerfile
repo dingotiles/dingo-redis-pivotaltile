@@ -2,10 +2,11 @@ FROM ubuntu:15.10
 
 RUN apt-get update && \
     apt-get -y install git zip unzip \
+        build-essential \
         libxml2-dev libxslt-dev libcurl4-openssl-dev \
-        build-essential zlib1g-dev libssl-dev libreadline6-dev libyaml-dev \
+        zlib1g-dev libssl-dev libreadline6-dev libyaml-dev \
         tree file curl wget bzr jq \
-        python-pip \
+        libpython-dev python-pip \
     && pip --no-input install awscli \
     && apt-get clean
 
@@ -20,10 +21,10 @@ RUN cd \
       && ruby -v \
       && gem install bundler bosh_cli cf-uaac license_finder fog mime-types --no-rdoc --no-ri
 
-ADD https://github.com/geofffranks/spruce/releases/download/v1.8.10/spruce-linux-amd64 /usr/bin/spruce
+COPY https://github.com/geofffranks/spruce/releases/download/v1.8.10/spruce-linux-amd64 /usr/bin/spruce
 RUN chmod 755 /usr/bin/spruce
 
-ADD https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.23.0 /tmp/cf.tgz
+COPY https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.23.0 /tmp/cf.tgz
 RUN tar xzf /tmp/cf.tgz -C /usr/bin && rm /tmp/cf.tgz
 
 # Set environment variables.
