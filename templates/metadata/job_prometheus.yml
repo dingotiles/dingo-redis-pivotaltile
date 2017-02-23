@@ -95,7 +95,7 @@ job_types:
           source_labels: []
           target_label: __address__
         static_configs:
-        - targets: [https://api.sys-q02a.cf.fsillab.ford.com/v2/info]
+        - targets: [(( $runtime.system_api_url ))/v2/info]
       - job_name: cf_login
         metrics_path: /probe
         params:
@@ -142,10 +142,10 @@ job_types:
         - targets: [https://uaa.sys-q02a.cf.fsillab.ford.com/login]
     bosh_exporter:
       bosh:
-        ca_cert: REDACTED
-        password: REDACTED
-        url: https://10.50.17.129
-        username: pcf
+        ca_cert: (( $director.ca_certificate ))
+        url: (( $director.hostname ))
+        username: (( $director.username ))
+        password: (( $director.password ))
       metrics:
         environment: alpha-a
     cf_exporter:
