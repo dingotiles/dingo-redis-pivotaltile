@@ -60,16 +60,11 @@ sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-prom
 
 cat workspace/metadata/dingo-prometheus.yml
 
-echo Looking up all previous versions to generate content_migrations/dingo-prometheus.yml
-./tile/ci/tasks/opsmgr16_content_migration.rb ${TILE_VERSION} workspace/content_migrations/dingo-prometheus.yml
-
-cat workspace/content_migrations/dingo-prometheus.yml
-
 cd workspace
 ls -laR .
 
 echo "creating dingo-prometheus-${TILE_VERSION}.pivotal file"
-zip -r dingo-prometheus-${TILE_VERSION}.pivotal content_migrations migrations metadata releases
+zip -r dingo-prometheus-${TILE_VERSION}.pivotal migrations metadata releases
 
 mv dingo-prometheus-${TILE_VERSION}.pivotal ../product
 ls ../product
