@@ -117,7 +117,7 @@ job_types:
           source_labels: []
           target_label: __address__
         static_configs:
-        - targets: [https://login.sys-q02a.cf.fsillab.ford.com/login]
+        - targets: [(( $runtime.login_url ))/login]
       - job_name: cf_uaa
         metrics_path: /probe
         params:
@@ -139,7 +139,7 @@ job_types:
           source_labels: []
           target_label: __address__
         static_configs:
-        - targets: [https://uaa.sys-q02a.cf.fsillab.ford.com/login]
+        - targets: [(( $runtime.uaa_url ))/login]
     bosh_exporter:
       bosh:
         ca_cert: (( $director.ca_certificate ))
@@ -150,9 +150,10 @@ job_types:
         environment: alpha-a
     cf_exporter:
       cf:
-        api_url: https://api.sys-q02a.cf.fsillab.ford.com
-        client_id: prometheus-cf
-        client_secret: REDACTED
+        api_url: (( $runtime.system_api_url ))
+        skip_ssl_verify: (( .ha_proxy.skip_cert_verify.value ))
+        client_id: (( .uaa.push_console_credentials.identity ))
+        client_secret: (( .uaa.push_console_credentials.password ))
         deployment_name: cloudfoundry
         password: REDACTED
         username: admin
@@ -160,10 +161,10 @@ job_types:
         environment: alpha-a
     firehose_exporter:
       doppler:
-        url: wss://doppler.sys-q02a.cf.fsillab.ford.com:443
+        url: wss://doppler.(( $runtime.system_domain )):443
       metrics:
         environment: alpha-a
       uaa:
-        client_id: prometheus-firehose
-        client_secret: REDACTED
-        url: https://uaa.sys-q02a.cf.fsillab.ford.com
+        client_id: (( .uaa.push_console_credentials.identity ))
+        client_secret: (( .uaa.push_console_credentials.password ))
+        url: (( $runtime.uaa_url ))
