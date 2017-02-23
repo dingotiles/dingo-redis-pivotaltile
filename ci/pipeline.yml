@@ -69,8 +69,8 @@ jobs:
   plan:
   - aggregate:
     - { get: tile }
-    - { get: generated-tile, passed: [upload-opsmgr16] }
-    - { get: tile-version,   passed: [upload-opsmgr16], params: { bump: final } }
+    - { get: generated-tile, passed: [create-product] }
+    - { get: tile-version,   passed: [create-product], params: { bump: final } }
   - task: re-version-product
     file: tile/ci/tasks/re-version-product.yml
     params:
