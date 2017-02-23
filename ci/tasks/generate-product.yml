@@ -11,6 +11,8 @@ inputs:
   path: prometheus
 - name: node-exporter-boshrelease
   path: node-exporter
+- name: postgres-boshrelease
+  path: postgres
 - name: pivnet-stemcell
 
 outputs:

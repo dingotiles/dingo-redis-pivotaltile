@@ -26,7 +26,7 @@ releases:
 YAML
 
 # versions available via inputs
-boshreleases=("prometheus" "node-exporter")
+boshreleases=("prometheus" "node-exporter" "postgres")
 for boshrelease in "${boshreleases[@]}"
 do
   release_version=$(cat ${boshrelease}/version)
@@ -51,6 +51,7 @@ spruce merge --prune meta \
   tile/templates/metadata/form_types.yml \
   tile/templates/metadata/property_blueprints.yml \
   tile/templates/metadata/job_compilation.yml \
+  tile/templates/metadata/job_database.yml \
   tile/templates/metadata/job_prometheus.yml \
     > workspace/metadata/dingo-prometheus.yml
 

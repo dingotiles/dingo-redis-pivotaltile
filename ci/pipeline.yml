@@ -3,9 +3,9 @@ groups:
 - name: pipeline
   jobs:
   - create-product
-  - shipit
-  - patch
-  - promote
+  # - shipit
+  # - patch
+  # - promote
 - name: stemcells
   jobs: [upload-stemcell]
 - name: image
@@ -41,9 +41,11 @@ jobs:
       params: {tarball: true}
     - get: node-exporter-boshrelease
       params: {tarball: true}
+    - get: postgres-boshrelease
+      params: {tarball: true}
     - get: pivnet-stemcell
-      trigger: true
-      passed: [upload-stemcell]
+      # trigger: true
+      # passed: [upload-stemcell]
     - get: tile-version
       params: {pre: rc}
   - task: generate-product
@@ -51,65 +53,65 @@ jobs:
     params:
       AWS_ACCESS_KEY: {{concourse-aws-access-key}}
       AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
-  - put: generated-tile
-    params: {file: product/dingo-prometheus-*.pivotal}
-  - put: tile-version
-    params: {file: tile-version/number}
-  - task: upload-product-opsmgr18
-    file: tile/ci/tasks/upload-product.yml
-    params:
-      opsmgr_url: {{opsmgr18-url}}
-      opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
-      opsmgr_username: {{opsmgr18-username}}
-      opsmgr_password: {{opsmgr18-password}}
-      opsmgr_version: 1.7
+  # - put: generated-tile
+  #   params: {file: product/dingo-prometheus-*.pivotal}
+  # - put: tile-version
+  #   params: {file: tile-version/number}
+  # - task: upload-product-opsmgr18
+  #   file: tile/ci/tasks/upload-product.yml
+  #   params:
+  #     opsmgr_url: {{opsmgr18-url}}
+  #     opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
+  #     opsmgr_username: {{opsmgr18-username}}
+  #     opsmgr_password: {{opsmgr18-password}}
+  #     opsmgr_version: 1.7
 
-- name: shipit
-  serial_groups: [opsmgr16, opsmgr18]
-  plan:
-  - aggregate:
-    - { get: tile }
-    - { get: generated-tile, passed: [create-product] }
-    - { get: tile-version,   passed: [create-product], params: { bump: final } }
-  - task: re-version-product
-    file: tile/ci/tasks/re-version-product.yml
-    params:
-      AWS_ACCESS_KEY: {{concourse-aws-access-key}}
-      AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
-  - put: tile-version
-    params: {file: tile-version/number}
-  - put: generated-tile
-    params: {file: reversioned-product/dingo-prometheus-*.pivotal}
-  - aggregate:
-    - task: upload-product-opsmgr18
-      file: tile/ci/tasks/upload-product.yml
-      params:
-        opsmgr_url: {{opsmgr18-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr18-username}}
-        opsmgr_password: {{opsmgr18-password}}
-        opsmgr_version: 1.7
-
-- name: patch
-  serial_groups: [opsmgr]
-  plan:
-  - { get: tile-version, passed: [shipit], trigger: true, params: { bump: patch, pre: rc } }
-  - { put: tile-version, params: { file: tile-version/number } }
-
-- name: promote
-  plan:
-  - aggregate:
-    - get: tile
-    - get: tile-version
-      passed: [shipit]
-  - task: promote-public
-    file: tile/ci/tasks/promote-public.yml
-    params:
-      AWS_ACCESS_KEY_ID: {{concourse-aws-access-key}}
-      AWS_SECRET_ACCESS_KEY: {{concourse-aws-secret-access-key}}
-      AWS_DEFAULT_REGION: ap-southeast-1
-      from_bucket: dingo-prometheus-pivotaltile
-      to_bucket: dingo-prometheus-public-pivotaltile
+# - name: shipit
+#   serial_groups: [opsmgr16, opsmgr18]
+#   plan:
+#   - aggregate:
+#     - { get: tile }
+#     - { get: generated-tile, passed: [create-product] }
+#     - { get: tile-version,   passed: [create-product], params: { bump: final } }
+#   - task: re-version-product
+#     file: tile/ci/tasks/re-version-product.yml
+#     params:
+#       AWS_ACCESS_KEY: {{concourse-aws-access-key}}
+#       AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
+#   - put: tile-version
+#     params: {file: tile-version/number}
+#   - put: generated-tile
+#     params: {file: reversioned-product/dingo-prometheus-*.pivotal}
+#   - aggregate:
+#     - task: upload-product-opsmgr18
+#       file: tile/ci/tasks/upload-product.yml
+#       params:
+#         opsmgr_url: {{opsmgr18-url}}
+#         opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
+#         opsmgr_username: {{opsmgr18-username}}
+#         opsmgr_password: {{opsmgr18-password}}
+#         opsmgr_version: 1.7
+#
+# - name: patch
+#   serial_groups: [opsmgr]
+#   plan:
+#   - { get: tile-version, passed: [shipit], trigger: true, params: { bump: patch, pre: rc } }
+#   - { put: tile-version, params: { file: tile-version/number } }
+#
+# - name: promote
+#   plan:
+#   - aggregate:
+#     - get: tile
+#     - get: tile-version
+#       passed: [shipit]
+#   - task: promote-public
+#     file: tile/ci/tasks/promote-public.yml
+#     params:
+#       AWS_ACCESS_KEY_ID: {{concourse-aws-access-key}}
+#       AWS_SECRET_ACCESS_KEY: {{concourse-aws-secret-access-key}}
+#       AWS_DEFAULT_REGION: ap-southeast-1
+#       from_bucket: dingo-prometheus-pivotaltile
+#       to_bucket: dingo-prometheus-public-pivotaltile
 
 
 - name: build-task-image
@@ -174,20 +176,27 @@ resources:
     user: cloudfoundry-community
     repository: node-exporter-boshrelease
 
+- name: postgres-boshrelease
+  type: github-release
+  source:
+    access_token: {{github-release-access-token}}
+    user: cloudfoundry-community
+    repository: postgres-boshrelease
+
 - name: pivnet-stemcell
   type: pivnet
   source:
     api_token: {{pivnet-api-token}}
     product_slug: stemcells
 
-- name: generated-tile
-  type: s3
-  source:
-    access_key_id: {{concourse-aws-access-key}}
-    secret_access_key: {{concourse-aws-secret-access-key}}
-    bucket: dingo-prometheus-pivotaltile
-    regexp: dingo-prometheus-(.*).pivotal
-    region_name: ap-southeast-1
+# - name: generated-tile
+#   type: s3
+#   source:
+#     access_key_id: {{concourse-aws-access-key}}
+#     secret_access_key: {{concourse-aws-secret-access-key}}
+#     bucket: dingo-prometheus-pivotaltile
+#     regexp: dingo-prometheus-(.*).pivotal
+#     region_name: ap-southeast-1
 
 resource_types:
 - name: pivnet
