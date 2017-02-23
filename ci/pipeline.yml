@@ -3,7 +3,6 @@ groups:
 - name: pipeline
   jobs:
   - create-product
-  - upload-opsmgr16
   - shipit
   - patch
   - promote
@@ -21,35 +20,26 @@ jobs:
       trigger: true
       params: {globs: ["*vsphere*"]}
   - aggregate:
-    - task: upload-stemcell-opsmgr16
+    - task: upload-stemcell-opsmgr18
       file: tile/ci/tasks/upload-stemcell.yml
       params:
-        opsmgr_url: {{opsmgr16-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr16-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr16-username}}
-        opsmgr_password: {{opsmgr16-password}}
-        opsmgr_version: 1.6
-    - task: upload-stemcell-opsmgr17
-      file: tile/ci/tasks/upload-stemcell.yml
-      params:
-        opsmgr_url: {{opsmgr17-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr17-username}}
-        opsmgr_password: {{opsmgr17-password}}
+        opsmgr_url: {{opsmgr18-url}}
+        opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
+        opsmgr_username: {{opsmgr18-username}}
+        opsmgr_password: {{opsmgr18-password}}
         opsmgr_version: 1.7
 
 - name: create-product
-  serial_groups: [opsmgr17]
+  serial_groups: [opsmgr18]
   plan:
   - aggregate:
     - get: tile
     - get: product-tile
-      trigger: true
-    - get: vault-boshrelease
-      trigger: true
+      # trigger: true
+    - get: prometheus-boshrelease
+      # trigger: true
       params: {tarball: true}
-    - get: broker-registrar
-      trigger: true
+    - get: node-exporter-boshrelease
       params: {tarball: true}
     - get: pivnet-stemcell
       trigger: true
@@ -62,36 +52,20 @@ jobs:
       AWS_ACCESS_KEY: {{concourse-aws-access-key}}
       AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
   - put: generated-tile
-    params: {file: product/dingo-secrets-*.pivotal}
+    params: {file: product/dingo-prometheus-*.pivotal}
   - put: tile-version
     params: {file: tile-version/number}
-  - task: upload-product-opsmgr17
+  - task: upload-product-opsmgr18
     file: tile/ci/tasks/upload-product.yml
     params:
-      opsmgr_url: {{opsmgr17-url}}
-      opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
-      opsmgr_username: {{opsmgr17-username}}
-      opsmgr_password: {{opsmgr17-password}}
+      opsmgr_url: {{opsmgr18-url}}
+      opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
+      opsmgr_username: {{opsmgr18-username}}
+      opsmgr_password: {{opsmgr18-password}}
       opsmgr_version: 1.7
 
-- name: upload-opsmgr16
-  serial_groups: [opsmgr16]
-  plan:
-  - aggregate:
-    - { get: tile }
-    - { get: generated-tile, passed: [create-product], trigger: true }
-    - { get: tile-version, passed: [create-product] }
-  - task: upload-product-opsmgr16
-    file: tile/ci/tasks/upload-product.yml
-    params:
-      opsmgr_url: {{opsmgr16-url}}
-      opsmgr_skip_ssl_verification: {{opsmgr16-skip-ssl-verification}}
-      opsmgr_username: {{opsmgr16-username}}
-      opsmgr_password: {{opsmgr16-password}}
-      opsmgr_version: 1.6
-
 - name: shipit
-  serial_groups: [opsmgr16, opsmgr17]
+  serial_groups: [opsmgr16, opsmgr18]
   plan:
   - aggregate:
     - { get: tile }
@@ -105,23 +79,15 @@ jobs:
   - put: tile-version
     params: {file: tile-version/number}
   - put: generated-tile
-    params: {file: reversioned-product/dingo-secrets-*.pivotal}
+    params: {file: reversioned-product/dingo-prometheus-*.pivotal}
   - aggregate:
-    - task: upload-product-opsmgr16
+    - task: upload-product-opsmgr18
       file: tile/ci/tasks/upload-product.yml
       params:
-        opsmgr_url: {{opsmgr16-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr16-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr16-username}}
-        opsmgr_password: {{opsmgr16-password}}
-        opsmgr_version: 1.6
-    - task: upload-product-opsmgr17
-      file: tile/ci/tasks/upload-product.yml
-      params:
-        opsmgr_url: {{opsmgr17-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr17-username}}
-        opsmgr_password: {{opsmgr17-password}}
+        opsmgr_url: {{opsmgr18-url}}
+        opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
+        opsmgr_username: {{opsmgr18-username}}
+        opsmgr_password: {{opsmgr18-password}}
         opsmgr_version: 1.7
 
 - name: patch
@@ -142,8 +108,8 @@ jobs:
       AWS_ACCESS_KEY_ID: {{concourse-aws-access-key}}
       AWS_SECRET_ACCESS_KEY: {{concourse-aws-secret-access-key}}
       AWS_DEFAULT_REGION: ap-southeast-1
-      from_bucket: dingo-secrets-pivotaltile
-      to_bucket: dingo-secrets-public-pivotaltile
+      from_bucket: dingo-prometheus-pivotaltile
+      to_bucket: dingo-prometheus-public-pivotaltile
 
 
 - name: build-task-image
@@ -159,20 +125,20 @@ resources:
 - name: tile
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-secrets-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
     branch: {{tile-branch}}
     private_key: {{github-key}}
 - name: product-tile
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-secrets-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
     branch: {{tile-branch}}
     private_key: {{github-key}}
     paths: [templates]
 - name: docker-image-tile
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-secrets-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
     branch: {{tile-branch}}
     private_key: {{github-key}}
     paths: [ci/ci_image/*]
@@ -182,25 +148,25 @@ resources:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
-    repository: dingotiles/dingo-secrets-pivotaltile-pipeline
+    repository: dingotiles/dingo-prometheus-pivotaltile-pipeline
 
 - name: tile-version
   type: semver
   source:
     driver: git
-    uri: git@github.com:dingotiles/dingo-secrets-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
     branch: version
     file: version
     initial_version: 0.0.1
     private_key: {{github-key}}
 
-- name: vault-boshrelease
+- name: prometheus-boshrelease
   type: bosh-io-release
-  source: {repository: cloudfoundry-community/vault-boshrelease}
+  source: {repository: cloudfoundry-community/prometheus-boshrelease}
 
-- name: broker-registrar
+- name: node-exporter-boshrelease
   type: bosh-io-release
-  source: {repository: cloudfoundry-community/broker-registrar-boshrelease}
+  source: {repository: cloudfoundry-community/node-exporter-boshrelease}
 
 - name: pivnet-stemcell
   type: pivnet
@@ -213,8 +179,8 @@ resources:
   source:
     access_key_id: {{concourse-aws-access-key}}
     secret_access_key: {{concourse-aws-secret-access-key}}
-    bucket: dingo-secrets-pivotaltile
-    regexp: dingo-secrets-(.*).pivotal
+    bucket: dingo-prometheus-pivotaltile
+    regexp: dingo-prometheus-(.*).pivotal
     region_name: ap-southeast-1
 
 resource_types:

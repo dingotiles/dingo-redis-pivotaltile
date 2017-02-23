@@ -6,8 +6,7 @@ set -x # print commands
 mkdir -p tile/tmp/metadata
 mkdir -p workspace/metadata
 mkdir -p workspace/releases
-mkdir -p workspace/content_migrations # opsmgr v1.6
-cp -r tile/migrations workspace/ # opsmgr v1.7
+cp -r tile/migrations workspace/ # opsmgr v1.7+
 
 TILE_VERSION=$(cat tile-version/number)
 
@@ -27,7 +26,7 @@ releases:
 YAML
 
 # versions available via inputs
-boshreleases=("vault" "broker-registrar")
+boshreleases=("prometheus" "node-exporter")
 for boshrelease in "${boshreleases[@]}"
 do
   release_version=$(cat ${boshrelease}/version)
@@ -52,26 +51,24 @@ spruce merge --prune meta \
   tile/templates/metadata/form_types.yml \
   tile/templates/metadata/property_blueprints.yml \
   tile/templates/metadata/job_compilation.yml \
-  tile/templates/metadata/job_vault.yml \
-  tile/templates/metadata/job_vault_broker.yml \
-  tile/templates/metadata/job_broker_registrar.yml \
-    > workspace/metadata/dingo-secrets.yml
+  tile/templates/metadata/job_prometheus.yml \
+    > workspace/metadata/dingo-prometheus.yml
 
 
-sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-secrets.yml
+sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-prometheus.yml
 
-cat workspace/metadata/dingo-secrets.yml
+cat workspace/metadata/dingo-prometheus.yml
 
-echo Looking up all previous versions to generate content_migrations/dingo-secrets.yml
-./tile/ci/tasks/opsmgr16_content_migration.rb ${TILE_VERSION} workspace/content_migrations/dingo-secrets.yml
+echo Looking up all previous versions to generate content_migrations/dingo-prometheus.yml
+./tile/ci/tasks/opsmgr16_content_migration.rb ${TILE_VERSION} workspace/content_migrations/dingo-prometheus.yml
 
-cat workspace/content_migrations/dingo-secrets.yml
+cat workspace/content_migrations/dingo-prometheus.yml
 
 cd workspace
 ls -laR .
 
-echo "creating dingo-secrets-${TILE_VERSION}.pivotal file"
-zip -r dingo-secrets-${TILE_VERSION}.pivotal content_migrations migrations metadata releases
+echo "creating dingo-prometheus-${TILE_VERSION}.pivotal file"
+zip -r dingo-prometheus-${TILE_VERSION}.pivotal content_migrations migrations metadata releases
 
-mv dingo-secrets-${TILE_VERSION}.pivotal ../product
+mv dingo-prometheus-${TILE_VERSION}.pivotal ../product
 ls ../product

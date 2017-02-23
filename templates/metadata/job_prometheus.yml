@@ -1,8 +1,8 @@
 job_types:
-- name: vault
-  resource_label: Vault
+- name: prometheus
+  resource_label: Prometheus
   templates:
-  - {name: vault, release: vault}
+  - {name: prometheus, release: prometheus}
   static_ip: 1
   dynamic_ip: 0
   max_in_flight: 500
@@ -44,5 +44,4 @@ job_types:
       default:
         identity: vcap
   manifest: |
-    vault:
-      backend: (( .properties.backend_selector.selected_option.parsed_manifest(vault_backend_snippet) ))
+    prometheus: ~
