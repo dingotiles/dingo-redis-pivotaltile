@@ -2,8 +2,7 @@ job_types:
 - name: grafana
   resource_label: Grafana Dashboard
   templates:
-  - {name: postgres, release: postgres}
-  - {name: postgres, release: postgres}
+  - {name: grafana, release: prometheus}
   - {name: toolbelt, release: toolbelt}
   - {name: toolbelt-quick, release: toolbelt}
   static_ip: 1
@@ -32,14 +31,14 @@ job_types:
       type: integer
       configurable: true
       default: 1
-  instance_definitions:
-    - name: instances
-      type: integer
-      configurable: false
-      default: 1
-      constraints:
-        min: 1
-        max: 1
+  instance_definition:
+    name: instances
+    type: integer
+    configurable: false
+    default: 1
+    constraints:
+      min: 1
+      max: 1
   manifest: |
     # route_registrar
     nats:

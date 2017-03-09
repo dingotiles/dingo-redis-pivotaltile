@@ -28,8 +28,8 @@ job_types:
     static_ip: 0
     dynamic_ip: 1
     max_in_flight: 1
-    instance_definitions:
-    - name: instances
+    instance_definition:
+      name: instances
       type: integer
       configurable: false
       default: 1
