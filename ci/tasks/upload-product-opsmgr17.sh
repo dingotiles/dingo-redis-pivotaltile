@@ -48,7 +48,7 @@ mv ${tile_path} ${zip_tile_path}
   echo Installing product version $product_version
 mv ${zip_tile_path} ${tile_path}
 
-prev_version=$(curl_auth -s "${opsmgr_url}/api/v0/deployed/products" | jq -r ".[] | select(.type == \"dingo-prometheus\")")
+prev_version=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-prometheus\")")
 
 if [[ "${prev_version}X" == "X" ]]; then
   echo Adding product ${product_version} to the installation
