@@ -20,17 +20,17 @@ jobs:
       trigger: true
       params: {globs: ["*vsphere*"]}
   - aggregate:
-    - task: upload-stemcell-opsmgr18
+    - task: upload-stemcell-opsmgr17
       file: tile/ci/tasks/upload-stemcell.yml
       params:
-        opsmgr_url: {{opsmgr18-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr18-username}}
-        opsmgr_password: {{opsmgr18-password}}
+        opsmgr_url: {{opsmgr17-url}}
+        opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
+        opsmgr_username: {{opsmgr17-username}}
+        opsmgr_password: {{opsmgr17-password}}
         opsmgr_version: 1.7
 
 - name: create-product
-  serial_groups: [opsmgr18]
+  serial_groups: [opsmgr17]
   plan:
   - aggregate:
     - get: tile
@@ -53,21 +53,21 @@ jobs:
     params:
       AWS_ACCESS_KEY: {{concourse-aws-access-key}}
       AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
-  # - put: generated-tile
-  #   params: {file: product/dingo-prometheus-*.pivotal}
-  # - put: tile-version
-  #   params: {file: tile-version/number}
-  # - task: upload-product-opsmgr18
-  #   file: tile/ci/tasks/upload-product.yml
-  #   params:
-  #     opsmgr_url: {{opsmgr18-url}}
-  #     opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
-  #     opsmgr_username: {{opsmgr18-username}}
-  #     opsmgr_password: {{opsmgr18-password}}
-  #     opsmgr_version: 1.7
+  - put: generated-tile
+    params: {file: product/dingo-prometheus-*.pivotal}
+  - put: tile-version
+    params: {file: tile-version/number}
+  - task: upload-product-opsmgr17
+    file: tile/ci/tasks/upload-product.yml
+    params:
+      opsmgr_url: {{opsmgr17-url}}
+      opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
+      opsmgr_username: {{opsmgr17-username}}
+      opsmgr_password: {{opsmgr17-password}}
+      opsmgr_version: 1.7
 
 # - name: shipit
-#   serial_groups: [opsmgr16, opsmgr18]
+#   serial_groups: [opsmgr16, opsmgr17]
 #   plan:
 #   - aggregate:
 #     - { get: tile }
@@ -83,13 +83,13 @@ jobs:
 #   - put: generated-tile
 #     params: {file: reversioned-product/dingo-prometheus-*.pivotal}
 #   - aggregate:
-#     - task: upload-product-opsmgr18
+#     - task: upload-product-opsmgr17
 #       file: tile/ci/tasks/upload-product.yml
 #       params:
-#         opsmgr_url: {{opsmgr18-url}}
-#         opsmgr_skip_ssl_verification: {{opsmgr18-skip-ssl-verification}}
-#         opsmgr_username: {{opsmgr18-username}}
-#         opsmgr_password: {{opsmgr18-password}}
+#         opsmgr_url: {{opsmgr17-url}}
+#         opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
+#         opsmgr_username: {{opsmgr17-username}}
+#         opsmgr_password: {{opsmgr17-password}}
 #         opsmgr_version: 1.7
 #
 # - name: patch
@@ -189,14 +189,14 @@ resources:
     api_token: {{pivnet-api-token}}
     product_slug: stemcells
 
-# - name: generated-tile
-#   type: s3
-#   source:
-#     access_key_id: {{concourse-aws-access-key}}
-#     secret_access_key: {{concourse-aws-secret-access-key}}
-#     bucket: dingo-prometheus-pivotaltile
-#     regexp: dingo-prometheus-(.*).pivotal
-#     region_name: ap-southeast-1
+- name: generated-tile
+  type: s3
+  source:
+    access_key_id: {{concourse-aws-access-key}}
+    secret_access_key: {{concourse-aws-secret-access-key}}
+    bucket: dingo-prometheus-pivotaltile
+    regexp: dingo-prometheus-(.*).pivotal
+    region_name: ap-southeast-1
 
 resource_types:
 - name: pivnet
