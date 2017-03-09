@@ -40,6 +40,7 @@ job_types:
       type: integer
       configurable: true
       default: 1
+  single_az_only: true
   instance_definition:
     name: instances
     type: integer
