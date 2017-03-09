@@ -147,6 +147,7 @@ job_types:
         - targets: [(( $runtime.uaa_url ))/login]
     bosh_exporter:
       bosh:
+        ca_cert: (( $director.ca_certificate ))
         url: (( $director.hostname ))
         username: (( $director.username ))
         password: (( $director.password ))
