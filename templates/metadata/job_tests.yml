@@ -28,6 +28,7 @@ job_types:
     static_ip: 0
     dynamic_ip: 1
     max_in_flight: 1
+    single_az_only: false
     instance_definition:
       name: instances
       type: integer
