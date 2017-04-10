@@ -4,9 +4,10 @@ post_deploy_errands:
 
 job_types:
   - name: sanity-test
-    resource_label: Internal sanity test of broker
+    resource_label: Sanity test of broker
     templates:
-    - {name: sanity-test, release: dingo-secrets}
+    - name: sanity-test-broker
+      release: docker
     errand: true
     resource_definitions:
     - name: ram
@@ -34,9 +35,3 @@ job_types:
       type: integer
       configurable: false
       default: 1
-    manifest: |
-      broker:
-        hostname: (( .vault_broker.first_ip ))
-        port: 5000
-        username: (( .properties.broker_username.value ))
-        password: (( .properties.broker_password.value ))

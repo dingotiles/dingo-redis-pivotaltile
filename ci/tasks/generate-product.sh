@@ -53,6 +53,8 @@ spruce merge --prune meta \
   tile/templates/metadata/job_compilation.yml \
   tile/templates/metadata/job_broker.yml \
   tile/templates/metadata/job_docker_backend.yml \
+  tile/templates/metadata/job_tests.yml \
+  tile/templates/metadata/job_broker_registrar.yml \
     > workspace/metadata/dingo-redis.yml
 
 
