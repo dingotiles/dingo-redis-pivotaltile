@@ -6,7 +6,7 @@ job_types:
     release: docker
     manifest: |
       tcp_address: 0.0.0.0
-      tls_cacert: ((.properties.docker_ca.client_certificate.value))
+      tls_cacert: ((.properties.docker_ca.value))
       tls_cert: ((.properties.docker_tls.cert_and_private_key_pems))
       tls_key: ((.properties.docker_tls.public_key_pem))
 
