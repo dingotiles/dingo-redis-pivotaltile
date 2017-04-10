@@ -10,5 +10,7 @@ property_blueprints:
 - name: docker-broker-redis-secret
   type: secret
 
+- name: docker-ca
+  type: ca_certificate
 - name: docker-tls
-  type: certificate
+  type: rsa_cert_credentials
