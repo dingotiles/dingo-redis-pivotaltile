@@ -50,7 +50,6 @@ spruce merge --prune meta \
   tile/tmp/metadata/releases.yml \
   tile/templates/metadata/form_types.yml \
   tile/templates/metadata/property_blueprints.yml \
-  tile/templates/metadata/job_compilation.yml \
   tile/templates/metadata/job_broker.yml \
   tile/templates/metadata/job_docker_backend.yml \
   tile/templates/metadata/job_tests.yml \
