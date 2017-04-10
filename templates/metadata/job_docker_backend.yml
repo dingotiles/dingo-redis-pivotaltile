@@ -6,9 +6,9 @@ job_types:
     release: docker
     manifest: |
       tcp_address: 0.0.0.0
-      tls_cacert: ((docker-ca.client_certificate.value))
-      tls_cert: ((docker-tls.cert_and_private_key_pems))
-      tls_key: ((docker-tls.public_key_pem))
+      tls_cacert: ((.properties.docker_ca.client_certificate.value))
+      tls_cert: ((.properties.docker_tls.cert_and_private_key_pems))
+      tls_key: ((.properties.docker_tls.public_key_pem))
 
   - name: cf-containers-broker
     release: docker
@@ -17,9 +17,9 @@ job_types:
         as: servicebroker
         shared: true
     manifest: |
-      username: ((broker-username))
-      password: ((broker-password))
-      cookie_secret: ((broker-cookie-secret))
+      username: ((.properties.broker_username.value))
+      password: ((.properties.broker_password.value))
+      cookie_secret: ((.properties.broker_cookie_secret.value))
       max_containers: 20
       services:
       - id: '0fdcc9c0-14f5-11e7-9d8c-cfde16aa4822'

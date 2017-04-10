@@ -1,16 +1,16 @@
 ---
 property_blueprints:
-- name: broker-username
+- name: broker_username
   type: secret
-- name: broker-password
+- name: broker_password
   type: secret
-- name: broker-cookie-secret
-  type: secret
-
-- name: docker-broker-redis-secret
+- name: broker_cookie_secret
   type: secret
 
-- name: docker-ca
+- name: docker_broker_redis_secret
+  type: secret
+
+- name: docker_ca
   type: ca_certificate
-- name: docker-tls
+- name: docker_tls
   type: rsa_cert_credentials
