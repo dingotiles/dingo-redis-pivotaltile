@@ -41,6 +41,8 @@ jobs:
       params: {tarball: true}
     - get: cf-subway-boshrelease
       params: {tarball: true}
+    - get: broker-registrar-boshrelease
+      params: {tarball: true}
     - get: pivnet-stemcell
       # trigger: true
       # passed: [upload-stemcell]
@@ -172,6 +174,11 @@ resources:
   type: bosh-io-release
   source:
     repository: cloudfoundry-community/cf-subway-boshrelease
+
+- name: broker-registrar-boshrelease
+  type: bosh-io-release
+  source:
+    repository: cloudfoundry-community/broker-registrar-boshrelease
 
 - name: pivnet-stemcell
   type: pivnet

@@ -11,6 +11,8 @@ inputs:
   path: docker
 - name: cf-subway-boshrelease
   path: cf-subway
+- name: broker-registrar-boshrelease
+  path: broker-registrar
 - name: pivnet-stemcell
 
 outputs:
