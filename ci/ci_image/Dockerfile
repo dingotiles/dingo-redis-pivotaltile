@@ -21,10 +21,10 @@ RUN cd \
       && ruby -v \
       && gem install bundler bosh_cli cf-uaac license_finder fog mime-types --no-rdoc --no-ri
 
-ADD https://github.com/geofffranks/spruce/releases/download/v1.8.10/spruce-linux-amd64 /usr/bin/spruce
+ADD https://github.com/geofffranks/spruce/releases/download/v1.8.13/spruce-linux-amd64 /usr/bin/spruce
 RUN chmod 755 /usr/bin/spruce
 
-ADD https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.23.0 /tmp/cf.tgz
+ADD https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.25.0 /tmp/cf.tgz
 RUN tar xzf /tmp/cf.tgz -C /usr/bin && rm /tmp/cf.tgz
 
 # Set environment variables.
