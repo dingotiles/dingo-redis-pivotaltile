@@ -37,11 +37,6 @@ job_types:
     type: integer
     configurable: false
     default: 1
-  property_blueprints:
-  - name: vm_credentials
-    type: salted_credentials
-    default:
-      identity: vcap
 
 - name: broker-deregistrar
   resource_label: De-register broker
@@ -80,8 +75,3 @@ job_types:
     type: integer
     configurable: false
     default: 1
-  property_blueprints:
-  - name: vm_credentials
-    type: salted_credentials
-    default:
-      identity: vcap
