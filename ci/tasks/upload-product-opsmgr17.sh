@@ -37,7 +37,7 @@ curl_auth "${opsmgr_url}/api/v0/staged/products"; echo
 curl_auth "${opsmgr_url}/api/v0/deployed/products"; echo
 
 echo "POST /api/v0/available_products -F 'product[file]=@${tile_path}'"
-curl -f ${insecure} -H "Authorization: Bearer ${access_token}" \
+curl -v -f ${insecure} -H "Authorization: Bearer ${access_token}" \
   "${opsmgr_url}/api/v0/available_products" -X POST -F "product[file]=@${tile_path}"; echo
 
 echo Getting $product_version from inside .pivotal zip file
