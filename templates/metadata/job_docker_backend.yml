@@ -39,7 +39,7 @@ job_types:
           supportUrl: 'https://slack.dingotiles.com'
         dashboard_client:
           id: docker-broker-redis
-          secret: ((docker-broker-redis-secret))
+          secret: ((.properties.docker_broker_redis_secret.value))
         plans:
         - id: '13d21792-14f5-11e7-81cd-4357fa4eeda9'
           name: ready
