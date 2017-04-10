@@ -161,9 +161,12 @@ resources:
     private_key: {{github-key}}
 
 - name: docker-boshrelease
-  type: bosh-io-release
+  type: github-release
   source:
-    repository: cf-platform-eng/docker-boshrelease
+    access_token: {{github-release-access-token}}
+    user: cloudfoundry-community
+    repository: docker-boshrelease
+    pre_release: true
 
 - name: cf-subway-boshrelease
   type: bosh-io-release
