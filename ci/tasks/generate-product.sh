@@ -54,8 +54,8 @@ spruce merge --prune meta \
   tile/templates/metadata/job_broker.yml \
   tile/templates/metadata/job_docker_backend.yml \
   tile/templates/metadata/job_tests.yml \
-  tile/templates/metadata/job_broker_registrar.yml \
     > workspace/metadata/dingo-redis.yml
+  #tile/templates/metadata/job_broker_registrar.yml \
 
 
 sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-redis.yml
