@@ -11,8 +11,8 @@ job_types:
     manifest: |
       cf:
         api_url: (( $runtime.system_api_url ))
-        admin_username: (( ..cf.uaa.admin_credentials.identity ))
-        admin_password: (( ..cf.uaa.admin_credentials.password ))
+        username: (( ..cf.uaa.admin_credentials.identity ))
+        password: (( ..cf.uaa.admin_credentials.password ))
         skip_ssl_validation: (( ..cf.ha_proxy.skip_cert_verify.value ))
   errand: true
   resource_definitions:
@@ -50,8 +50,8 @@ job_types:
     manifest: |
       cf:
         api_url: (( $runtime.system_api_url ))
-        admin_username: (( ..cf.uaa.admin_credentials.identity ))
-        admin_password: (( ..cf.uaa.admin_credentials.password ))
+        username: (( ..cf.uaa.admin_credentials.identity ))
+        password: (( ..cf.uaa.admin_credentials.password ))
         skip_ssl_validation: (( ..cf.ha_proxy.skip_cert_verify.value ))
   errand: true
   resource_definitions:
