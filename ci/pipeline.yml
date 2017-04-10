@@ -185,6 +185,7 @@ resources:
   source:
     api_token: {{pivnet-api-token}}
     product_slug: stemcells
+    product_version: 3363\..*
 
 - name: generated-tile
   type: s3
