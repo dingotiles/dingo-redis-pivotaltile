@@ -161,18 +161,14 @@ resources:
     private_key: {{github-key}}
 
 - name: docker-boshrelease
-  type: github-release
+  type: bosh-io-release
   source:
-    access_token: {{github-release-access-token}}
-    user: cloudfoundry-community
-    repository: docker-boshrelease
+    repository: cf-platform-eng/docker-boshrelease
 
 - name: cf-subway-boshrelease
-  type: github-release
+  type: bosh-io-release
   source:
-    access_token: {{github-release-access-token}}
-    user: cloudfoundry-community
-    repository: cf-subway-boshrelease
+    repository: cloudfoundry-community/cf-subway-boshrelease
 
 - name: pivnet-stemcell
   type: pivnet
