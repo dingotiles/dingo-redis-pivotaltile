@@ -1,3 +1,6 @@
+---
+post_deploy_errands:
+- name: broker-registrar
 
 job_types:
 - name: broker-registrar
@@ -32,8 +35,9 @@ job_types:
   static_ip: 0
   dynamic_ip: 1
   max_in_flight: 1
-  instance_definitions:
-  - name: instances
+  single_az_only: false
+  instance_definition:
+    name: instances
     type: integer
     configurable: false
     default: 1
@@ -70,8 +74,9 @@ job_types:
   static_ip: 0
   dynamic_ip: 1
   max_in_flight: 1
-  instance_definitions:
-  - name: instances
+  single_az_only: false
+  instance_definition:
+    name: instances
     type: integer
     configurable: false
     default: 1
