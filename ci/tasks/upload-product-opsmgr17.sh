@@ -3,7 +3,7 @@
 set -x # print commands
 set -e # fail fast
 
-tile_path=$(ls generated-tile/dingo-prometheus*.pivotal)
+tile_path=$(ls generated-tile/dingo-redis*.pivotal)
 ls -al ${tile_path}
 
 insecure=
@@ -41,29 +41,29 @@ curl -f ${insecure} -H "Authorization: Bearer ${access_token}" \
   "${opsmgr_url}/api/v0/available_products" -X POST -F "product[file]=@${tile_path}"; echo
 
 echo Getting $product_version from inside .pivotal zip file
-zip_tile_path=generated-tile/dingo-prometheus.zip
+zip_tile_path=generated-tile/dingo-redis.zip
 mv ${tile_path} ${zip_tile_path}
-  unzip -u ${zip_tile_path} metadata/dingo-prometheus.yml
-  product_version=$(cat metadata/dingo-prometheus.yml | spruce json | jq -r .product_version)
+  unzip -u ${zip_tile_path} metadata/dingo-redis.yml
+  product_version=$(cat metadata/dingo-redis.yml | spruce json | jq -r .product_version)
   echo Installing product version $product_version
 mv ${zip_tile_path} ${tile_path}
 
-prev_version=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-prometheus\")")
+prev_version=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-redis\")")
 
 if [[ "${prev_version}X" == "X" ]]; then
   echo Adding product ${product_version} to the installation
   curl -f ${insecure} -H "Authorization: Bearer ${access_token}" \
     "${opsmgr_url}/api/v0/staged/products" -X POST \
-      -d "name=dingo-prometheus&product_version=${product_version}"
+      -d "name=dingo-redis&product_version=${product_version}"
 else
   echo Upgrading product to ${product_version}
 
-  product_install_uuid=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-prometheus\") | .guid")
+  product_install_uuid=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-redis\") | .guid")
   curl_auth "${opsmgr_url}/api/v0/staged/products/${product_install_uuid}" -X PUT \
       -d "to_version=${product_version}"
 fi
 echo
-product_install_uuid=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-prometheus\") | .guid")
+product_install_uuid=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq -r ".[] | select(.type == \"dingo-redis\") | .guid")
 
 echo "Installing product (guid ${product_install_uuid})"
 

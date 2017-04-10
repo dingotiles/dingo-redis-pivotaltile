@@ -20,28 +20,26 @@ jobs:
       trigger: true
       params: {globs: ["*vsphere*"]}
   - aggregate:
-    - task: upload-stemcell-opsmgr17
+    - task: upload-stemcell-opsmgr110
       file: tile/ci/tasks/upload-stemcell.yml
       params:
-        opsmgr_url: {{opsmgr17-url}}
-        opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
-        opsmgr_username: {{opsmgr17-username}}
-        opsmgr_password: {{opsmgr17-password}}
+        opsmgr_url: {{opsmgr110-url}}
+        opsmgr_skip_ssl_verification: {{opsmgr110-skip-ssl-verification}}
+        opsmgr_username: {{opsmgr110-username}}
+        opsmgr_password: {{opsmgr110-password}}
         opsmgr_version: 1.7
 
 - name: create-product
-  serial_groups: [opsmgr17]
+  serial_groups: [opsmgr110]
   plan:
   - aggregate:
     - get: tile
     - get: product-tile
       # trigger: true
-    - get: prometheus-boshrelease
+    - get: docker-boshrelease
       # trigger: true
       params: {tarball: true}
-    - get: node-exporter-boshrelease
-      params: {tarball: true}
-    - get: postgres-boshrelease
+    - get: cf-subway-boshrelease
       params: {tarball: true}
     - get: pivnet-stemcell
       # trigger: true
@@ -54,20 +52,20 @@ jobs:
       AWS_ACCESS_KEY: {{concourse-aws-access-key}}
       AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
   - put: generated-tile
-    params: {file: product/dingo-prometheus-*.pivotal}
+    params: {file: product/dingo-redis-*.pivotal}
   - put: tile-version
     params: {file: tile-version/number}
-  - task: upload-product-opsmgr17
+  - task: upload-product-opsmgr110
     file: tile/ci/tasks/upload-product.yml
     params:
-      opsmgr_url: {{opsmgr17-url}}
-      opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
-      opsmgr_username: {{opsmgr17-username}}
-      opsmgr_password: {{opsmgr17-password}}
+      opsmgr_url: {{opsmgr110-url}}
+      opsmgr_skip_ssl_verification: {{opsmgr110-skip-ssl-verification}}
+      opsmgr_username: {{opsmgr110-username}}
+      opsmgr_password: {{opsmgr110-password}}
       opsmgr_version: 1.7
 
 # - name: shipit
-#   serial_groups: [opsmgr16, opsmgr17]
+#   serial_groups: [opsmgr16, opsmgr110]
 #   plan:
 #   - aggregate:
 #     - { get: tile }
@@ -81,15 +79,15 @@ jobs:
 #   - put: tile-version
 #     params: {file: tile-version/number}
 #   - put: generated-tile
-#     params: {file: reversioned-product/dingo-prometheus-*.pivotal}
+#     params: {file: reversioned-product/dingo-redis-*.pivotal}
 #   - aggregate:
-#     - task: upload-product-opsmgr17
+#     - task: upload-product-opsmgr110
 #       file: tile/ci/tasks/upload-product.yml
 #       params:
-#         opsmgr_url: {{opsmgr17-url}}
-#         opsmgr_skip_ssl_verification: {{opsmgr17-skip-ssl-verification}}
-#         opsmgr_username: {{opsmgr17-username}}
-#         opsmgr_password: {{opsmgr17-password}}
+#         opsmgr_url: {{opsmgr110-url}}
+#         opsmgr_skip_ssl_verification: {{opsmgr110-skip-ssl-verification}}
+#         opsmgr_username: {{opsmgr110-username}}
+#         opsmgr_password: {{opsmgr110-password}}
 #         opsmgr_version: 1.7
 #
 # - name: patch
@@ -110,8 +108,8 @@ jobs:
 #       AWS_ACCESS_KEY_ID: {{concourse-aws-access-key}}
 #       AWS_SECRET_ACCESS_KEY: {{concourse-aws-secret-access-key}}
 #       AWS_DEFAULT_REGION: ap-southeast-1
-#       from_bucket: dingo-prometheus-pivotaltile
-#       to_bucket: dingo-prometheus-public-pivotaltile
+#       from_bucket: dingo-redis-pivotaltile
+#       to_bucket: dingo-redis-public-pivotaltile
 
 
 - name: build-task-image
@@ -127,20 +125,20 @@ resources:
 - name: tile
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-redis-pivotaltile.git
     branch: {{tile-branch}}
     private_key: {{github-key}}
 - name: product-tile
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-redis-pivotaltile.git
     branch: {{tile-branch}}
     private_key: {{github-key}}
     paths: [templates]
 - name: docker-image-tile
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-redis-pivotaltile.git
     branch: {{tile-branch}}
     private_key: {{github-key}}
     paths: [ci/ci_image/*]
@@ -150,38 +148,31 @@ resources:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
-    repository: dingotiles/dingo-prometheus-pivotaltile-pipeline
+    repository: dingotiles/dingo-redis-pivotaltile-pipeline
 
 - name: tile-version
   type: semver
   source:
     driver: git
-    uri: git@github.com:dingotiles/dingo-prometheus-pivotaltile.git
+    uri: git@github.com:dingotiles/dingo-redis-pivotaltile.git
     branch: version
     file: version
     initial_version: 0.0.1
     private_key: {{github-key}}
 
-- name: prometheus-boshrelease
+- name: docker-boshrelease
   type: github-release
   source:
     access_token: {{github-release-access-token}}
     user: cloudfoundry-community
-    repository: prometheus-boshrelease
+    repository: docker-boshrelease
 
-- name: node-exporter-boshrelease
+- name: cf-subway-boshrelease
   type: github-release
   source:
     access_token: {{github-release-access-token}}
     user: cloudfoundry-community
-    repository: node-exporter-boshrelease
-
-- name: postgres-boshrelease
-  type: github-release
-  source:
-    access_token: {{github-release-access-token}}
-    user: cloudfoundry-community
-    repository: postgres-boshrelease
+    repository: cf-subway-boshrelease
 
 - name: pivnet-stemcell
   type: pivnet
@@ -194,8 +185,8 @@ resources:
   source:
     access_key_id: {{concourse-aws-access-key}}
     secret_access_key: {{concourse-aws-secret-access-key}}
-    bucket: dingo-prometheus-pivotaltile
-    regexp: dingo-prometheus-(.*).pivotal
+    bucket: dingo-redis-pivotaltile
+    regexp: dingo-redis-(.*).pivotal
     region_name: ap-southeast-1
 
 resource_types:

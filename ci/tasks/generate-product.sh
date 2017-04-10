@@ -26,7 +26,7 @@ releases:
 YAML
 
 # versions available via inputs
-boshreleases=("prometheus" "node-exporter" "postgres")
+boshreleases=("docker" "cf-subway")
 for boshrelease in "${boshreleases[@]}"
 do
   release_version=$(cat ${boshrelease}/version)
@@ -51,21 +51,20 @@ spruce merge --prune meta \
   tile/templates/metadata/form_types.yml \
   tile/templates/metadata/property_blueprints.yml \
   tile/templates/metadata/job_compilation.yml \
-  tile/templates/metadata/job_database.yml \
-  tile/templates/metadata/job_prometheus.yml \
-  tile/templates/metadata/job_grafana.yml \
-    > workspace/metadata/dingo-prometheus.yml
+  tile/templates/metadata/job_broker.yml \
+  tile/templates/metadata/job_docker_backend.yml \
+    > workspace/metadata/dingo-redis.yml
 
 
-sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-prometheus.yml
+sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-redis.yml
 
-cat workspace/metadata/dingo-prometheus.yml
+cat workspace/metadata/dingo-redis.yml
 
 cd workspace
 ls -laR .
 
-echo "creating dingo-prometheus-${TILE_VERSION}.pivotal file"
-zip -r dingo-prometheus-${TILE_VERSION}.pivotal migrations metadata releases
+echo "creating dingo-redis-${TILE_VERSION}.pivotal file"
+zip -r dingo-redis-${TILE_VERSION}.pivotal migrations metadata releases
 
-mv dingo-prometheus-${TILE_VERSION}.pivotal ../product
+mv dingo-redis-${TILE_VERSION}.pivotal ../product
 ls ../product

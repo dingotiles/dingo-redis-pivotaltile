@@ -1,13 +1,14 @@
 ---
 property_blueprints:
-- name: database_username
+- name: broker-username
   type: secret
-- name: database_password
+- name: broker-password
+  type: secret
+- name: broker-cookie-secret
   type: secret
 
-- name: grafana_admin_username
+- name: docker-broker-redis-secret
   type: secret
-- name: grafana_admin_password
-  type: secret
-- name: grafana_secret_key
-  type: secret
+
+- name: docker-tls
+  type: certificate

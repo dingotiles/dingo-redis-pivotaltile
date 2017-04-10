@@ -1,6 +1,6 @@
 ---
 platform: linux
-image: docker:///dingotiles/dingo-prometheus-pivotaltile-pipeline
+image: docker:///dingotiles/dingo-redis-pivotaltile-pipeline
 
 inputs:
 - name: tile

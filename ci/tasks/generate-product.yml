@@ -2,17 +2,15 @@
 platform: linux
 image_resource:
    type: docker-image
-   source: {repository: dingotiles/dingo-prometheus-pivotaltile-pipeline}
+   source: {repository: dingotiles/dingo-redis-pivotaltile-pipeline}
 
 inputs:
 - name: tile
 - name: tile-version
-- name: prometheus-boshrelease
-  path: prometheus
-- name: node-exporter-boshrelease
-  path: node-exporter
-- name: postgres-boshrelease
-  path: postgres
+- name: docker-boshrelease
+  path: docker
+- name: cf-subway-boshrelease
+  path: cf-subway
 - name: pivnet-stemcell
 
 outputs:
