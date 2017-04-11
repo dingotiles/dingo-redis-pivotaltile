@@ -44,6 +44,7 @@ jobs:
     - get: broker-registrar-boshrelease
       params: {tarball: true}
     - get: pivnet-stemcell
+      params: {globs: ["*vsphere*"]}
       # trigger: true
       # passed: [upload-stemcell]
     - get: tile-version
