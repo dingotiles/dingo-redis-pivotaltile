@@ -7,7 +7,7 @@ job_types:
     consumes: |
       backend:
         from: backend
-    manifest:
+    manifest: |
       username: ((.properties.broker_username.value))
       password: ((.properties.broker_password.value))
       name: docker-broker
