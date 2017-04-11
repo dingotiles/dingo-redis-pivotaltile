@@ -14,7 +14,7 @@ job_types:
     release: docker
     provides: |
       cf-containers-broker:
-        as: servicebroker
+        as: backend
         shared: true
     manifest: |
       username: ((.properties.broker_username.value))

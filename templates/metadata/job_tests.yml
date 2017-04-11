@@ -8,6 +8,9 @@ job_types:
     templates:
     - name: sanity-test-broker
       release: docker
+      consumes: |
+        servicebroker:
+          from: subway
     errand: true
     resource_definitions:
     - name: ram

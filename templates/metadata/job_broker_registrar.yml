@@ -8,6 +8,9 @@ job_types:
   templates:
   - name: broker-registrar
     release: broker-registrar
+    consumes: |
+      servicebroker:
+        from: subway
     manifest: |
       cf:
         api_url: (( $runtime.system_api_url ))
@@ -47,6 +50,9 @@ job_types:
   templates:
   - name: broker-deregistrar
     release: broker-registrar
+    consumes: |
+      servicebroker:
+        from: subway
     manifest: |
       cf:
         api_url: (( $runtime.system_api_url ))
