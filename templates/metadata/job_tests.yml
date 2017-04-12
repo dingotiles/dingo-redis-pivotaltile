@@ -18,8 +18,8 @@ job_types:
       manifest: |
         tcp_address: 0.0.0.0
         tls_cacert: (( $ops_manager.ca_certificate ))
-        tls_cert: ((.properties.docker_tls.cert_and_private_key_pems))
-        tls_key: ((.properties.docker_tls.public_key_pem))
+        tls_cert: ((.properties.docker_tls.cert_pem))
+        tls_key: ((.properties.docker_tls.private_key_pem))
     errand: true
     resource_definitions:
     - name: ram
