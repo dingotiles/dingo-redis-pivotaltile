@@ -7,10 +7,14 @@ job_types:
     consumes: |
       backend:
         from: backend
-    manifest: |
-      username: ((.properties.broker_username.value))
-      password: ((.properties.broker_password.value))
-      name: dingo-redis
+    # manifest: |
+    #   username: ((.properties.broker_username.value))
+    #   password: ((.properties.broker_password.value))
+    #   name: dingo-redis
+  manifest: |
+    username: ((.properties.broker_username.value))
+    password: ((.properties.broker_password.value))
+    name: dingo-redis
   static_ip: 1
   dynamic_ip: 0
   max_in_flight: 1

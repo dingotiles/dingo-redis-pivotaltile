@@ -13,6 +13,8 @@ job_types:
           from: subway
         docker-broker-catalog:
           from: backend
+    - name: docker
+      release: docker
     errand: true
     resource_definitions:
     - name: ram
