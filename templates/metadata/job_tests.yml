@@ -15,6 +15,12 @@ job_types:
           from: backend
     - name: docker
       release: docker
+    manifest: |
+      # docker
+      tcp_address: 0.0.0.0
+      tls_cacert: ((.properties.docker_ca.value))
+      tls_cert: ((.properties.docker_tls.cert_and_private_key_pems))
+      tls_key: ((.properties.docker_tls.public_key_pem))
     errand: true
     resource_definitions:
     - name: ram

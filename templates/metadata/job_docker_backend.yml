@@ -90,6 +90,12 @@ job_types:
     constraints:
       min: 1
   manifest: |
+    # docker
+    tcp_address: 0.0.0.0
+    tls_cacert: ((.properties.docker_ca.value))
+    tls_cert: ((.properties.docker_tls.cert_and_private_key_pems))
+    tls_key: ((.properties.docker_tls.public_key_pem))
+
     # cf-containers-broker
     username: ((.properties.broker_username.value))
     password: ((.properties.broker_password.value))
