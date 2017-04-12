@@ -68,6 +68,12 @@ product_install_uuid=$(curl_auth -s "${opsmgr_url}/api/v0/staged/products" | jq 
 echo "Installing product (guid ${product_install_uuid})"
 
 echo "Running installation process"
+echo "..."
+echo "..."
+echo "..."
+echo "Actually... you need to press 'Accept Changes' now due to a v1.10 bug"
+exit 0
+
 response=$(curl -f ${insecure} -H "Authorization: Bearer ${access_token}" \
   "${opsmgr_url}/api/v0/installations" -d "ignore_warnings=1&enabled_errands[${product_install_uuid}][post_deploy_errands][]=broker-registrar" -X POST)
 installation_id=$(echo $response | jq -r .install.id)
