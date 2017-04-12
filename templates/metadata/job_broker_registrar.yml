@@ -11,18 +11,12 @@ job_types:
     consumes: |
       servicebroker:
         from: subway
-    # manifest: |
-    #   cf:
-    #     api_url: (( $runtime.system_api_url ))
-    #     username: (( ..cf.uaa.admin_credentials.identity ))
-    #     password: (( ..cf.uaa.admin_credentials.password ))
-    #     skip_ssl_validation: (( ..cf.ha_proxy.skip_cert_verify.value ))
-  manifest: |
-    cf:
-      api_url: (( $runtime.system_api_url ))
-      username: (( ..cf.uaa.admin_credentials.identity ))
-      password: (( ..cf.uaa.admin_credentials.password ))
-      skip_ssl_validation: (( ..cf.ha_proxy.skip_cert_verify.value ))
+    manifest: |
+      cf:
+        api_url: (( $runtime.system_api_url ))
+        username: (( ..cf.uaa.admin_credentials.identity ))
+        password: (( ..cf.uaa.admin_credentials.password ))
+        skip_ssl_validation: (( ..cf.ha_proxy.skip_cert_verify.value ))
   errand: true
   resource_definitions:
   - name: ram
