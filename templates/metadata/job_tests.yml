@@ -11,6 +11,8 @@ job_types:
       consumes: |
         servicebroker:
           from: subway
+        docker-broker-catalog:
+          from: backend
     errand: true
     resource_definitions:
     - name: ram
