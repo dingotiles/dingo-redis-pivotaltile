@@ -4,7 +4,9 @@ groups:
   jobs:
   - create-product
   # - shipit
-  # - patch
+  - patch
+  - minor
+  - major
   # - promote
 - name: stemcells
   jobs: [upload-stemcell]
@@ -93,26 +95,29 @@ jobs:
 #         opsmgr_password: {{opsmgr110-password}}
 #         opsmgr_version: 1.7
 #
-# - name: patch
-#   serial_groups: [opsmgr]
-#   plan:
-#   - { get: tile-version, passed: [shipit], trigger: true, params: { bump: patch, pre: rc } }
-#   - { put: tile-version, params: { file: tile-version/number } }
-#
-# - name: promote
-#   plan:
-#   - aggregate:
-#     - get: tile
-#     - get: tile-version
-#       passed: [shipit]
-#   - task: promote-public
-#     file: tile/ci/tasks/promote-public.yml
-#     params:
-#       AWS_ACCESS_KEY_ID: {{concourse-aws-access-key}}
-#       AWS_SECRET_ACCESS_KEY: {{concourse-aws-secret-access-key}}
-#       AWS_DEFAULT_REGION: ap-southeast-1
-#       from_bucket: dingo-redis-pivotaltile
-#       to_bucket: dingo-redis-public-pivotaltile
+
+- name: patch
+  public: true
+  plan:
+  # - { get: tile-version, passed: [shipit], trigger: true, params: { bump: patch, pre: rc } }
+  - { get: tile-version, trigger: true, params: { bump: patch, pre: rc } }
+  - { put: tile-version, params: { file: tile-version/number } }
+
+- name: major
+  public: true
+  plan:
+  - get: tile-version
+    params: {bump: major, pre: rc}
+  - put: tile-version
+    params: {file: tile-version/number}
+
+- name: minor
+  public: true
+  plan:
+  - get: tile-version
+    params: {bump: minor, pre: rc}
+  - put: tile-version
+    params: {file: tile-version/number}
 
 
 - name: build-task-image
