@@ -3,7 +3,7 @@ groups:
 - name: pipeline
   jobs:
   - create-product
-  # - shipit
+  - shipit
   - patch
   - minor
   - major
@@ -69,38 +69,37 @@ jobs:
       opsmgr_password: {{opsmgr110-password}}
       opsmgr_version: 1.7
 
-# - name: shipit
-#   serial_groups: [opsmgr16, opsmgr110]
-#   plan:
-#   - aggregate:
-#     - { get: tile }
-#     - { get: generated-tile, passed: [create-product] }
-#     - { get: tile-version,   passed: [create-product], params: { bump: final } }
-#   - task: re-version-product
-#     file: tile/ci/tasks/re-version-product.yml
-#     params:
-#       AWS_ACCESS_KEY: {{concourse-aws-access-key}}
-#       AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
-#   - put: tile-version
-#     params: {file: tile-version/number}
-#   - put: generated-tile
-#     params: {file: reversioned-product/dingo-redis-*.pivotal}
-#   - aggregate:
-#     - task: upload-product-opsmgr110
-#       file: tile/ci/tasks/upload-product.yml
-#       params:
-#         opsmgr_url: {{opsmgr110-url}}
-#         opsmgr_skip_ssl_verification: {{opsmgr110-skip-ssl-verification}}
-#         opsmgr_username: {{opsmgr110-username}}
-#         opsmgr_password: {{opsmgr110-password}}
-#         opsmgr_version: 1.7
-#
+- name: shipit
+  serial_groups: [opsmgr110]
+  plan:
+  - aggregate:
+    - { get: tile }
+    - { get: generated-tile, passed: [create-product] }
+    - { get: tile-version,   passed: [create-product], params: { bump: final } }
+  - task: re-version-product
+    file: tile/ci/tasks/re-version-product.yml
+    params:
+      AWS_ACCESS_KEY: {{concourse-aws-access-key}}
+      AWS_SECRET_KEY: {{concourse-aws-secret-access-key}}
+  - put: tile-version
+    params: {file: tile-version/number}
+  - put: generated-tile
+    params: {file: reversioned-product/dingo-redis-*.pivotal}
+  - aggregate:
+    - task: upload-product-opsmgr110
+      file: tile/ci/tasks/upload-product.yml
+      params:
+        opsmgr_url: {{opsmgr110-url}}
+        opsmgr_skip_ssl_verification: {{opsmgr110-skip-ssl-verification}}
+        opsmgr_username: {{opsmgr110-username}}
+        opsmgr_password: {{opsmgr110-password}}
+        opsmgr_version: 1.7
 
 - name: patch
   public: true
   plan:
-  # - { get: tile-version, passed: [shipit], trigger: true, params: { bump: patch, pre: rc } }
-  - { get: tile-version, trigger: true, params: { bump: patch, pre: rc } }
+  - { get: tile-version, passed: [shipit], trigger: true, params: { bump: patch, pre: rc } }
+  # - { get: tile-version, trigger: true, params: { bump: patch, pre: rc } }
   - { put: tile-version, params: { file: tile-version/number } }
 
 - name: major
