@@ -9,6 +9,8 @@ inputs:
 - name: tile-version
 - name: docker-boshrelease
   path: docker
+- name: dingo-redis-image-boshrelease
+  path: dingo-redis-image
 - name: cf-subway-boshrelease
   path: cf-subway
 - name: broker-registrar-boshrelease

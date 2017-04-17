@@ -10,6 +10,9 @@ job_types:
       tls_cert: ((.properties.docker_tls.cert_pem))
       tls_key: ((.properties.docker_tls.private_key_pem))
 
+  - name: dingo-redis-image
+    release: dingo-redis-image
+
   - name: cf-containers-broker
     release: docker
     provides: |
@@ -21,6 +24,7 @@ job_types:
       password: ((.properties.broker_password.value))
       cookie_secret: ((.properties.broker_cookie_secret.value))
       max_containers: 20
+      fetch_images: false
       services:
       - id: '0fdcc9c0-14f5-11e7-9d8c-cfde16aa4822'
         name: 'dingo-redis'

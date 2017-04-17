@@ -41,6 +41,8 @@ jobs:
     - get: docker-boshrelease
       # trigger: true
       params: {tarball: true}
+    - get: dingo-redis-image-boshrelease
+      params: {tarball: true}
     - get: cf-subway-boshrelease
       params: {tarball: true}
     - get: broker-registrar-boshrelease
@@ -174,6 +176,13 @@ resources:
     user: cloudfoundry-community
     repository: docker-boshrelease
     pre_release: true
+
+- name: dingo-redis-image-boshrelease
+  type: github-release
+  source:
+    access_token: {{github-release-access-token}}
+    user: dingotiles
+    repository: dingo-redis-image-boshrelease
 
 - name: cf-subway-boshrelease
   type: bosh-io-release
