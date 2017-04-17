@@ -20,6 +20,8 @@ job_types:
         tls_cacert: (( $ops_manager.ca_certificate ))
         tls_cert: ((.properties.docker_tls.cert_pem))
         tls_key: ((.properties.docker_tls.private_key_pem))
+    - name: dingo-redis-image
+      release: dingo-redis-image
     errand: true
     resource_definitions:
     - name: ram
