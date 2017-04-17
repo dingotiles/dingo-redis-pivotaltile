@@ -7,7 +7,7 @@ groups:
   - patch
   - minor
   - major
-  # - promote
+  - promote
 - name: stemcells
   jobs: [upload-stemcell]
 - name: image
@@ -120,6 +120,20 @@ jobs:
   - put: tile-version
     params: {file: tile-version/number}
 
+- name: promote
+  plan:
+  - aggregate:
+    - get: tile
+    - get: tile-version
+      passed: [shipit]
+  - task: promote-public
+    file: tile/ci/tasks/promote-public.yml
+    params:
+      AWS_ACCESS_KEY_ID: {{concourse-aws-access-key}}
+      AWS_SECRET_ACCESS_KEY: {{concourse-aws-secret-access-key}}
+      AWS_DEFAULT_REGION: ap-southeast-1
+      from_bucket: dingo-redis-pivotaltile
+      to_bucket: dingo-redis-public-pivotaltile
 
 - name: build-task-image
   serial: true
