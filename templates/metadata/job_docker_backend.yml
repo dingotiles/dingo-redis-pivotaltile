@@ -88,7 +88,7 @@ job_types:
   instance_definition:
     name: instances
     type: integer
-    configurable: false
-    default: 1
+    configurable: true
+    default: 4
     constraints:
       min: 1
