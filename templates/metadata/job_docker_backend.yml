@@ -61,6 +61,12 @@ job_types:
           metadata:
             bullets:
               - 'Dedicated Redis 3.2 server'
+  - name: cadvisor
+    release: prometheus
+    manifest: |
+      cadvisor:
+        docker: unix:///var/vcap/sys/run/docker/docker.sock
+        docker_only: true
   static_ip: 1
   dynamic_ip: 0
   max_in_flight: 2

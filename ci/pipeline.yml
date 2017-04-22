@@ -47,6 +47,8 @@ jobs:
       params: {tarball: true}
     - get: broker-registrar-boshrelease
       params: {tarball: true}
+    - get: prometheus-boshrelease
+      params: {tarball: true}
     - get: pivnet-stemcell
       params: {globs: ["*vsphere*"]}
       # trigger: true
@@ -207,6 +209,11 @@ resources:
   type: bosh-io-release
   source:
     repository: cloudfoundry-community/broker-registrar-boshrelease
+
+- name: prometheus-boshrelease
+  type: bosh-io-release
+  source:
+    repository: cloudfoundry-community/prometheus-boshrelease
 
 - name: pivnet-stemcell
   type: pivnet
