@@ -12,6 +12,7 @@ job_types:
       servicebroker:
         from: subway
     manifest: |
+      catalog_version: 1
       cf:
         api_url: (( $runtime.system_api_url ))
         username: (( ..cf.uaa.admin_credentials.identity ))
@@ -54,6 +55,7 @@ job_types:
       servicebroker:
         from: subway
     manifest: |
+      catalog_version: 1
       cf:
         api_url: (( $runtime.system_api_url ))
         username: (( ..cf.uaa.admin_credentials.identity ))
