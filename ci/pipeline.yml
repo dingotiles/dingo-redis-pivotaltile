@@ -44,8 +44,10 @@ jobs:
     - get: dingo-redis-image-boshrelease
       params: {tarball: true}
     - get: cf-subway-boshrelease
+      trigger: true
       params: {tarball: true}
     - get: broker-registrar-boshrelease
+      trigger: true
       params: {tarball: true}
     - get: prometheus-boshrelease
       params: {tarball: true}
