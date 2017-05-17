@@ -1,7 +1,7 @@
 job_types:
-  - name: broker-registrar
-    label: broker-registrar
-    resource_label: Register broker
+  - name: broker-deregistrar
+    label: broker-deregistrar
+    resource_label: De-register broker
 
     static_ip: 0
     dynamic_ip: 1
@@ -48,7 +48,7 @@ job_types:
         default: 0
 
     templates:
-      - name: broker-registrar
+      - name: broker-deregistrar
         release: broker-registrar
         consumes: |
           servicebroker:

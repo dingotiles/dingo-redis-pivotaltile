@@ -1,51 +1,66 @@
----
-post_deploy_errands:
-- name: sanity-test
-
 job_types:
   - name: sanity-test
+    label: sanity-test
     resource_label: Sanity test of Dingo Redis broker
-    templates:
-    - name: sanity-test-broker
-      release: docker
-      consumes: |
-        servicebroker:
-          from: subway
-        docker-broker-catalog:
-          from: backend
-    - name: docker
-      release: docker
-      manifest: |
-        tcp_address: 0.0.0.0
-        tls_cacert: (( $ops_manager.ca_certificate ))
-        tls_cert: ((.properties.docker_tls.cert_pem))
-        tls_key: ((.properties.docker_tls.private_key_pem))
-    - name: dingo-redis-image
-      release: dingo-redis-image
-    errand: true
-    resource_definitions:
-    - name: ram
-      type: integer
-      configurable: false
-      default: 512
-    - name: ephemeral_disk
-      type: integer
-      configurable: false
-      default: 1024
-    - name: persistent_disk
-      type: integer
-      configurable: false
-      default: 0
-    - name: cpu
-      type: integer
-      configurable: false
-      default: 1
+
     static_ip: 0
     dynamic_ip: 1
     max_in_flight: 1
     single_az_only: false
+    errand: true
+
     instance_definition:
       name: instances
       type: integer
-      configurable: false
+      label: Instances
+      configurable: true
       default: 1
+      constraints:
+        min: 1
+
+    resource_definitions:
+      - name: cpu
+        type: integer
+        label: CPU
+        configurable: true
+        default: 1
+        constraints:
+          min: 1
+          power_of_two: true
+      - name: ram
+        type: integer
+        label: RAM
+        configurable: true
+        default: 1_024
+        constraints:
+          min: 1_024
+      - name: ephemeral_disk
+        type: integer
+        label: Ephemeral Disk
+        configurable: true
+        default: 8_192
+        constraints:
+          min: 4_096
+      - name: persistent_disk
+        type: integer
+        label: Persistent Disk
+        configurable: false
+        default: 0
+
+    templates:
+      - name: sanity-test-broker
+        release: docker
+        consumes: |
+          servicebroker:
+            from: subway
+          docker-broker-catalog:
+            from: backend
+      - name: docker
+        release: docker
+        manifest: |
+          tcp_address: 0.0.0.0
+          tls_cacert: (( $ops_manager.ca_certificate ))
+          tls_cert: (( .docker.tls.cert_pem))
+          tls_key: (( .docker.tls.private_key_pem))
+      - name: dingo-redis-image
+        release: dingo-redis-image

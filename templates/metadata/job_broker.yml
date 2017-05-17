@@ -1,46 +1,69 @@
 job_types:
-- name: broker
-  resource_label: Broker
-  templates:
-  - name: subway-broker
-    release: cf-subway
-    consumes: |
-      backend:
-        from: backend
-    manifest: |
-      username: ((.properties.broker_username.value))
-      password: ((.properties.broker_password.value))
-      name: dingo-redis
-  static_ip: 1
-  dynamic_ip: 0
-  max_in_flight: 1
-  resource_definitions:
-    - name: ram
+  - name: broker
+    label: broker
+    resource_label: Broker
+
+    static_ip: 1
+    dynamic_ip: 0
+    max_in_flight: 1
+    single_az_only: false
+
+    instance_definition:
+      name: instances
       type: integer
-      configurable: true
-      default: 1024
-      constraints:
-        min: 512
-    - name: ephemeral_disk
-      type: integer
-      configurable: true
-      default: 10240
-      constraints:
-        min: 10240
-    - name: cpu
-      type: integer
+      label: Instances
       configurable: true
       default: 1
-    - name: persistent_disk
-      type: integer
-      configurable: true
-      default: 0
-  single_az_only: true
-  instance_definition:
-    name: instances
-    type: integer
-    configurable: false
-    default: 1
-    constraints:
-      min: 1
-      max: 1
+      constraints:
+        min: 1
+        max: 1
+
+    resource_definitions:
+      - name: cpu
+        type: integer
+        label: CPU
+        configurable: true
+        default: 1
+        constraints:
+          min: 1
+          power_of_two: true
+      - name: ram
+        type: integer
+        label: RAM
+        configurable: true
+        default: 1_024
+        constraints:
+          min: 1_024
+      - name: ephemeral_disk
+        type: integer
+        label: Ephemeral Disk
+        configurable: true
+        default: 8_192
+        constraints:
+          min: 4_096
+      - name: persistent_disk
+        type: integer
+        label: Persistent Disk
+        configurable: false
+        default: 0
+
+    property_blueprints:
+      - name: credentials
+        type: simple_credentials
+        configurable: false
+        default:
+          identity: admin
+      - name: cookie_secret
+        type: secret
+        configurable: false
+
+    templates:
+      - name: subway-broker
+        release: cf-subway
+        consumes: |
+          backend:
+            from: backend
+        manifest: |
+          name: dingo-redis
+          username: (( .broker.credentials.identity ))
+          password: (( .broker.credentials.password ))
