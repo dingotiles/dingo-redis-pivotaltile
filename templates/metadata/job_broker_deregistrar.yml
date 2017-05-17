@@ -1,4 +1,4 @@
-job_types:
+  job_types:
   - name: broker-deregistrar
     label: broker-deregistrar
     resource_label: De-register broker
@@ -29,9 +29,9 @@ job_types:
         type: integer
         label: RAM
         configurable: true
-        default: 1_024
+        default: 512
         constraints:
-          min: 1_024
+          min: 512
       - name: ephemeral_disk
         type: integer
         label: Ephemeral Disk
