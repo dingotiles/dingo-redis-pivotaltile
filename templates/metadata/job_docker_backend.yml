@@ -73,7 +73,7 @@ job_types:
             as: backend
             shared: true
         manifest: |
-          username: (( .broker.credentials.identify ))
+          username: (( .broker.credentials.identity ))
           password: (( .broker.credentials.password ))
           cookie_secret: (( .broker.cookie_secret.value ))
           max_containers: 20
