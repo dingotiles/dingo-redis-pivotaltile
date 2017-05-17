@@ -1,26 +1,32 @@
 #!/bin/bash
 
 set -e # fail fast
-set -x # print commands
 
-mkdir -p tile/tmp/metadata
+mkdir -p product-tile/tmp/metadata
 mkdir -p workspace/metadata
 mkdir -p workspace/releases
-cp -r tile/migrations workspace/ # opsmgr v1.7+
+cp -r product-tile/migrations workspace/ # opsmgr v1.7+
 
 TILE_VERSION=$(cat tile-version/number)
+echo "=============================================================================================="
+echo " Generating product ${product_name} ${TILE_VERSION} ..."
+echo "=============================================================================================="
 
-cat pivnet-stemcell/metadata.json
 STEMCELL_VERSION=$(cat pivnet-stemcell/metadata.json | jq -r ".Release.Version")
+IFS='.' read -ra STEMCELL_SERIES <<< "${STEMCELL_VERSION}"
+echo "* Using stemcell series ${STEMCELL_SERIES}"
 
-cat >tile/tmp/metadata/version.yml <<EOF
+cat >product-tile/tmp/metadata/version.yml <<EOF
 ---
 product_version: "${TILE_VERSION}"
+provides_product_versions:
+  - name: ${product_name}
+    version: "${TILE_VERSION}"
 stemcell_criteria:
-  version: "${STEMCELL_VERSION}"
+  version: "${STEMCELL_SERIES}"
 EOF
 
-cat >tile/tmp/metadata/releases.yml <<YAML
+cat >product-tile/tmp/metadata/releases.yml <<YAML
 ---
 releases:
 YAML
@@ -30,7 +36,8 @@ boshreleases=("docker" "dingo-redis-image" "cf-subway" "broker-registrar" "prome
 for boshrelease in "${boshreleases[@]}"
 do
   release_version=$(cat ${boshrelease}/version)
-  cat >>tile/tmp/metadata/releases.yml <<YAML
+  echo "* Using bosh release ${boshrelease} ${release_version}"
+  cat >>product-tile/tmp/metadata/releases.yml <<YAML
   - name: ${boshrelease}
     file: ${boshrelease}-${release_version}.tgz
     version: "${release_version}"
@@ -44,28 +51,26 @@ YAML
 done
 
 spruce merge --prune meta \
-  tile/templates/metadata/base.yml \
-  tile/templates/metadata/stemcell_criteria.yml \
-  tile/tmp/metadata/version.yml \
-  tile/tmp/metadata/releases.yml \
-  tile/templates/metadata/form_types.yml \
-  tile/templates/metadata/property_blueprints.yml \
-  tile/templates/metadata/job_broker.yml \
-  tile/templates/metadata/job_docker_backend.yml \
-  tile/templates/metadata/job_broker_registrar.yml \
-  tile/templates/metadata/job_tests.yml \
-    > workspace/metadata/dingo-redis.yml
+  product-tile/templates/metadata/base.yml \
+  product-tile/templates/metadata/stemcell_criteria.yml \
+  product-tile/tmp/metadata/version.yml \
+  product-tile/tmp/metadata/releases.yml \
+  product-tile/templates/metadata/form_types.yml \
+  product-tile/templates/metadata/install_time_verifiers.yml \
+  product-tile/templates/metadata/property_blueprints.yml \
+  product-tile/templates/metadata/job_broker.yml \
+  product-tile/templates/metadata/job_broker_deregistrar.yml \
+  product-tile/templates/metadata/job_docker_backend.yml \
+  product-tile/templates/metadata/job_broker_registrar.yml \
+  product-tile/templates/metadata/job_tests.yml \
+    > workspace/metadata/${product_name}.yml
 
+sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/${product_name}.yml
 
-sed -i "s/RELEASE_VERSION_MARKER/${TILE_VERSION}/" workspace/metadata/dingo-redis.yml
+echo "* Generated manifest:"
+cat workspace/metadata/${product_name}.yml
 
-cat workspace/metadata/dingo-redis.yml
-
+echo "* Generating product ${product_name}-${TILE_VERSION}.pivotal ..."
 cd workspace
-ls -laR .
-
-echo "creating dingo-redis-${TILE_VERSION}.pivotal file"
-zip -r dingo-redis-${TILE_VERSION}.pivotal migrations metadata releases
-
-mv dingo-redis-${TILE_VERSION}.pivotal ../product
-ls ../product
+zip -r ${product_name}-${TILE_VERSION}.pivotal migrations metadata releases
+mv ${product_name}-${TILE_VERSION}.pivotal ../product

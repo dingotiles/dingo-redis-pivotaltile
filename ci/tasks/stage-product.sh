@@ -2,10 +2,10 @@
 
 set -e # fail fast
 
-stemcell_path=$(ls pivnet-stemcell/*vsphere*)
+TILE_VERSION=$(cat tile-version/number)
 
 echo "=============================================================================================="
-echo " Uploading stemcell ${stemcell_path} to Ops Manager ${opsmgr_url} ..."
+echo " Staging product ${product_name} ${TILE_VERSION} to Ops Manager ${opsmgr_url} ..."
 echo "=============================================================================================="
 
 insecure=
@@ -19,5 +19,6 @@ om --target ${opsmgr_url} \
    ${skip_ssl} \
    --username "${opsmgr_username}" \
    --password "${opsmgr_password}" \
-   upload-stemcell \
-   --stemcell "${stemcell_path}"
+   stage-product \
+   --product-name ${product_name} \
+   --product-version "${TILE_VERSION}"

@@ -7,13 +7,15 @@ image_resource:
 
 inputs:
   - name: tile
-  - name: pivnet-stemcell
 
 params:
+  product_name:
   opsmgr_url:
   opsmgr_skip_ssl_verification:
   opsmgr_username:
   opsmgr_password:
+  opsmgr_default_az:
+  opsmgr_default_network:
 
 run:
-  path: tile/ci/tasks/upload-stemcell.sh
+  path: tile/ci/tasks/configure-product.sh

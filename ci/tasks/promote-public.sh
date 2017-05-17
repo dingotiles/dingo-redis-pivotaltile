@@ -1,13 +1,11 @@
 #!/bin/bash
 
 set -e # fail fast
-set -x
 
-TILE_NAME=${TILE_NAME:-dingo-redis}
 TILE_VERSION=$(cat tile-version/number)
+filename=${product_name}-${TILE_VERSION}.pivotal
 
-filename=${TILE_NAME}-${TILE_VERSION}.pivotal
-
-env
-aws s3 ls $from_bucket
-aws s3 cp s3://$from_bucket/$filename s3://$to_bucket/$filename
+echo "=============================================================================================="
+echo " Promoting product ${product_name} version ${TILE_VERSION} ..."
+echo "=============================================================================================="
+aws s3 cp s3://${from_bucket}/${filename} s3://${to_bucket}/${filename}

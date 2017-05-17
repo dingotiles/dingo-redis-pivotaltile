@@ -1,11 +1,23 @@
 #!/bin/bash
 
-set -x # print commands
 set -e # fail fast
 
-if [[ "${opsmgr_url}X" == "X" ]]; then
-  echo "upload-product.sh requires \$opsmgr_url, \$opsmgr_username, \$opsmgr_password"
-  exit 1
+product_path=$(ls generated-tile/${product_name}*.pivotal)
+
+echo "=============================================================================================="
+echo " Uploading product ${product_name} to Ops Manager ${opsmgr_url} ..."
+echo "=============================================================================================="
+
+insecure=
+skip_ssl=
+if [[ "${opsmgr_skip_ssl_verification}X" != "X" ]]; then
+  insecure="-k"
+  skip_ssl="--skip-ssl-validation"
 fi
 
-./tile/ci/tasks/upload-product-opsmgr17.sh
+om --target ${opsmgr_url} \
+   ${skip_ssl} \
+   --username "${opsmgr_username}" \
+   --password "${opsmgr_password}" \
+   upload-product \
+   --product "${product_path}"

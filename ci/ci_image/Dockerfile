@@ -10,22 +10,27 @@ RUN apt-get update && \
     && pip --no-input install awscli \
     && apt-get clean
 
-# install ruby & required gems/CLIs
 RUN cd \
-      && wget http://ftp.ruby-lang.org/pub/ruby/2.3/ruby-2.3.3.tar.gz \
-      && tar -xzvf ruby-2.3.3.tar.gz \
-      && cd ruby-2.3.3/ \
-      && ./configure \
-      && make \
-      && make install \
-      && ruby -v \
-      && gem install bundler bosh_cli cf-uaac license_finder fog mime-types --no-rdoc --no-ri
+    && wget http://ftp.ruby-lang.org/pub/ruby/2.3/ruby-2.3.3.tar.gz \
+    && tar -xzvf ruby-2.3.3.tar.gz \
+    && cd ruby-2.3.3/ \
+    && ./configure \
+    && make \
+    && make install \
+    && ruby -v \
+    && gem install bundler cf-uaac --no-rdoc --no-ri
 
-ADD https://github.com/geofffranks/spruce/releases/download/v1.8.13/spruce-linux-amd64 /usr/bin/spruce
+ADD https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.16-linux-amd64 /usr/bin/bosh
+RUN chmod 755 /usr/bin/bosh
+
+ADD https://github.com/geofffranks/spruce/releases/download/v1.9.0/spruce-linux-amd64 /usr/bin/spruce
 RUN chmod 755 /usr/bin/spruce
 
-ADD https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.25.0 /tmp/cf.tgz
+ADD https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.26.0 /tmp/cf.tgz
 RUN tar xzf /tmp/cf.tgz -C /usr/bin && rm /tmp/cf.tgz
+
+ADD https://github.com/pivotal-cf/om/releases/download/0.23.0/om-linux /usr/bin/om
+RUN chmod 755 /usr/bin/om
 
 # Set environment variables.
 ENV GOROOT /goroot
@@ -35,4 +40,4 @@ ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
 # Install Go
 RUN \
   mkdir -p /goroot && \
-  curl https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz | tar xvzf - -C /goroot --strip-components=1
+  curl https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz | tar xvzf - -C /goroot --strip-components=1
