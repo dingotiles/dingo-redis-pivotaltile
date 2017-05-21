@@ -115,7 +115,7 @@ job_types:
         release: dingo-redis-image
         consumes: |
           shield-daemon:
-            deployment: (( .dingo-shield.deployment_name ))
+            deployment: (( ..dingo-shield.deployment_name ))
             from: shield-daemon
       - name: cadvisor
         release: prometheus
