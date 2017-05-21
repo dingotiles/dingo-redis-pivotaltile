@@ -67,6 +67,9 @@ jobs:
         - get: prometheus-boshrelease
           params:
             tarball: true
+        - get: routing-boshrelease
+          params:
+            tarball: true
         - get: pivnet-stemcell
           trigger: true
           passed:
@@ -648,6 +651,11 @@ resources:
     type: bosh-io-release
     source:
       repository: cloudfoundry-community/prometheus-boshrelease
+
+  - name: routing-boshrelease
+    type: bosh-io-release
+    source:
+      repository: cloudfoundry-incubator/cf-routing-release
 
   - name: pivnet-stemcell
     type: pivnet

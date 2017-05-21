@@ -32,7 +32,7 @@ releases:
 YAML
 
 # versions available via inputs
-boshreleases=("docker" "dingo-redis-image" "cf-subway" "broker-registrar" "prometheus")
+boshreleases=("docker" "dingo-redis-image" "cf-subway" "broker-registrar" "prometheus" "routing")
 for boshrelease in "${boshreleases[@]}"
 do
   release_version=$(cat ${boshrelease}/version)

@@ -19,6 +19,8 @@ inputs:
     path: broker-registrar
   - name: prometheus-boshrelease
     path: prometheus
+  - name: routing-boshrelease
+    path: routing
   - name: pivnet-stemcell
 
 outputs:

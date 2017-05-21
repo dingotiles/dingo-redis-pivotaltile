@@ -67,3 +67,18 @@ job_types:
           name: dingo-redis
           username: (( .broker.credentials.identity ))
           password: (( .broker.credentials.password ))
+      - name: route_registrar
+        release: routing
+        manifest: |
+          nats:
+            machines: (( ..cf.nats.ips ))
+            port: 4222
+            user: (( ..cf.nats.credentials.identity ))
+            password: (( ..cf.nats.credentials.password ))
+          route_registrar:
+            routes:
+              - name: dingo-redis
+                registration_interval: 20s
+                port: 8080
+                uris:
+                  - dingo-redis.(( $runtime.system_domain ))
