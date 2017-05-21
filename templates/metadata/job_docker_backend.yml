@@ -113,7 +113,7 @@ job_types:
                       - 'Dedicated Redis 3.2 server'
       - name: cf-containers-shield-link
         release: dingo-redis-image
-        consumes:
+        consumes: |
           shield-daemon:
             deployment: (( .dingo-shield.deployment_name ))
             from: shield-daemon
