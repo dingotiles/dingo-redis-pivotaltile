@@ -78,6 +78,7 @@ job_types:
           cookie_secret: (( .broker.cookie_secret.value ))
           max_containers: 20
           fetch_images: false
+          enable_host_port_envvar: true
           services:
             - id: '0fdcc9c0-14f5-11e7-9d8c-cfde16aa4822'
               name: 'dingo-redis'
