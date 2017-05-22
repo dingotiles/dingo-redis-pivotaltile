@@ -50,7 +50,7 @@ job_types:
         release: broker-registrar
         consumes: |
           servicebroker:
-            from: subway
+            from: broker
         manifest: |
           catalog_version: 1
           cf:

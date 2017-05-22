@@ -50,7 +50,7 @@ job_types:
         release: docker
         consumes: |
           servicebroker:
-            from: subway
+            from: broker
           docker-broker-catalog:
             from: backend
       - name: docker
