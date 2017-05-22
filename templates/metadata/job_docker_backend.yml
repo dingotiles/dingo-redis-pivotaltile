@@ -117,7 +117,7 @@ job_types:
                       - 'Dedicated Redis 3.2 server'
       - name: cf-containers-shield-link
         release: dingo-redis-image
-        properties:: |
+        manifest: |
           shield-daemon:
             endpoint: https://shield.(( $runtime.system_domain ))
             provisioning_key: (( ..dingo-shield.shield.autoprovision_key.value ))
