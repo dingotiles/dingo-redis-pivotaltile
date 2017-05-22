@@ -60,6 +60,10 @@ job_types:
     templates:
       - name: subway-broker
         release: cf-subway
+        provides: |
+          subway:
+            as: broker
+            shared: true
         consumes: |
           backend:
             from: backend

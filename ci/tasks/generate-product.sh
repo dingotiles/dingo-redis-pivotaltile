@@ -62,6 +62,7 @@ spruce merge --prune meta \
   product-tile/templates/metadata/job_broker_deregistrar.yml \
   product-tile/templates/metadata/job_docker_backend.yml \
   product-tile/templates/metadata/job_broker_registrar.yml \
+  product-tile/templates/metadata/job_disaster_recovery.yml \
   product-tile/templates/metadata/job_tests.yml \
     > workspace/metadata/${product_name}.yml
 

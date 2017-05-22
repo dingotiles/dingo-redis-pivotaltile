@@ -1,0 +1,59 @@
+job_types:
+  - name: disaster-recovery
+    label: disaster-recovery
+    resource_label: One-click Disaster Recovery
+
+    static_ip: 0
+    dynamic_ip: 1
+    max_in_flight: 1
+    single_az_only: false
+    errand: true
+
+    instance_definition:
+      name: instances
+      type: integer
+      label: Instances
+      configurable: false
+      default: 1
+
+    resource_definitions:
+      - name: cpu
+        type: integer
+        label: CPU
+        configurable: true
+        default: 1
+        constraints:
+          min: 1
+          power_of_two: true
+      - name: ram
+        type: integer
+        label: RAM
+        configurable: true
+        default: 512
+        constraints:
+          min: 512
+      - name: ephemeral_disk
+        type: integer
+        label: Ephemeral Disk
+        configurable: true
+        default: 8_192
+        constraints:
+          min: 4_096
+      - name: persistent_disk
+        type: integer
+        label: Persistent Disk
+        configurable: false
+        default: 0
+
+    templates:
+      - name: disaster-recovery
+        release: dingo-redis-image
+        consumes: |
+          servicebroker:
+            from: broker
+        manifest: |
+          cf:
+            api_url: (( $runtime.system_api_url ))
+            admin_username: (( ..cf.uaa.admin_credentials.identity ))
+            admin_password: (( ..cf.uaa.admin_credentials.password ))
+            skip_ssl_validation: (( ..cf.ha_proxy.skip_cert_verify.value ))
