@@ -103,11 +103,15 @@ job_types:
                   description: Redis node
                   container:
                     backend: 'docker'
-                    image: 'frodenas/redis'
-                    tag: '3.2'
-                    persistent_volumes: [/data]
+                    image: 'dingotiles/dingo-redis'
+                    tag: 'latest'
+                    persistent_volumes: [/hab/svc/redis/data]
                   credentials:
-                    password: {key: 'REDIS_PASSWORD'}
+                    password:
+                      key: 'REDIS_PASSWORD'
+                    uri:
+                      prefix: 'redis'
+                      port: '6379/tcp'
                   metadata:
                     bullets:
                       - 'Dedicated Redis 3.2 server'
